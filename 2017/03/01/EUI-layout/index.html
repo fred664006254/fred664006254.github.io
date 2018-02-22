@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Egret," />
 
 
 
@@ -79,16 +79,18 @@
 
 
 
-<meta name="description" content="很惭愧，一点微小的工作">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Welcome To Junix&#39;s Blog">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="EUI容器布局白鹭引擎中的EUI容器布局分三种 : 水平,垂直,格子。以上三种基本布局就能满足大部分的需求，然而亲(gao)爱(shi)的产品经理总会有奇奇怪怪的设计。 弧形因为环形布局，依赖容器尺寸来定义半径，所以需要容器显式的设置width和height,在这种情况下measure方法将失去作用，如果需要根据内部子项计算尺寸，就要重写显示列表的更新函数updateDisplayList()。在">
+<meta name="keywords" content="Egret">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Egret的EUI自定义布局(弧形，等差排列)">
+<meta property="og:url" content="http://yoursite.com/2017/03/01/EUI-layout/index.html">
 <meta property="og:site_name" content="Welcome To Junix&#39;s Blog">
-<meta property="og:description" content="很惭愧，一点微小的工作">
+<meta property="og:description" content="EUI容器布局白鹭引擎中的EUI容器布局分三种 : 水平,垂直,格子。以上三种基本布局就能满足大部分的需求，然而亲(gao)爱(shi)的产品经理总会有奇奇怪怪的设计。 弧形因为环形布局，依赖容器尺寸来定义半径，所以需要容器显式的设置width和height,在这种情况下measure方法将失去作用，如果需要根据内部子项计算尺寸，就要重写显示列表的更新函数updateDisplayList()。在">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-02-22T05:37:26.028Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Welcome To Junix&#39;s Blog">
-<meta name="twitter:description" content="很惭愧，一点微小的工作">
+<meta name="twitter:title" content="Egret的EUI自定义布局(弧形，等差排列)">
+<meta name="twitter:description" content="EUI容器布局白鹭引擎中的EUI容器布局分三种 : 水平,垂直,格子。以上三种基本布局就能满足大部分的需求，然而亲(gao)爱(shi)的产品经理总会有奇奇怪怪的设计。 弧形因为环形布局，依赖容器尺寸来定义半径，所以需要容器显式的设置width和height,在这种情况下measure方法将失去作用，如果需要根据内部子项计算尺寸，就要重写显示列表的更新函数updateDisplayList()。在">
 
 
 
@@ -118,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/03/01/EUI-layout/"/>
 
 
 
 
 
-  <title>Welcome To Junix's Blog</title>
+  <title>Egret的EUI自定义布局(弧形，等差排列) | Welcome To Junix's Blog</title>
   
 
 
@@ -143,8 +145,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -217,9 +218,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -249,9 +250,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/03/01/EUI-layout/" itemprop="url">Egret的EUI自定义布局(弧形，等差排列)</a></h1>
+          <h1 class="post-title" itemprop="name headline">Egret的EUI自定义布局(弧形，等差排列)</h1>
         
 
         <div class="post-meta">
@@ -301,9 +300,7 @@
       
 
       
-        
-          
-            <h1 id="EUI容器布局"><a href="#EUI容器布局" class="headerlink" title="EUI容器布局"></a>EUI容器布局</h1><p>白鹭引擎中的EUI容器布局分三种 : <em>水平</em>,<em>垂直</em>,<em>格子</em>。<br>以上三种基本布局就能满足大部分的需求，然而亲(gao)爱(shi)的<del>产品经理</del>总会有<del>奇奇怪怪的</del>设计。</p>
+        <h1 id="EUI容器布局"><a href="#EUI容器布局" class="headerlink" title="EUI容器布局"></a>EUI容器布局</h1><p>白鹭引擎中的EUI容器布局分三种 : <em>水平</em>,<em>垂直</em>,<em>格子</em>。<br>以上三种基本布局就能满足大部分的需求，然而亲(gao)爱(shi)的<del>产品经理</del>总会有<del>奇奇怪怪的</del>设计。</p>
 <h3 id="弧形"><a href="#弧形" class="headerlink" title="弧形"></a>弧形</h3><p>因为环形布局，依赖容器尺寸来定义半径，所以需要容器显式的设置width和height,在这种情况下measure方法将失去作用，如果需要根据内部子项计算尺寸，就要重写显示列表的更新函数<code>updateDisplayList()</code>。在这个函数中，将根据起始角度，重定位所有子元件。</p>
 <blockquote>
 <pre><code>代码实现
@@ -311,8 +308,6 @@
 </blockquote>
 <p>抽离出来成类，调用时直接new MXCircleLayout即可，传入预先设定好的参数</p>
 
-          
-        
       
     </div>
     
@@ -327,139 +322,36 @@
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/22/JS-copy/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Junix">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Welcome To Junix's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/02/22/JS-copy/" itemprop="url">JavaScript踩过的坑---深复制和浅复制</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-22T19:02:41+08:00">
-                2017-02-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-
+            <a href="/tags/Egret/" rel="tag"># Egret</a>
           
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="深复制和浅复制"><a href="#深复制和浅复制" class="headerlink" title="深复制和浅复制"></a>深复制和浅复制</h1><p>JavaScript中针对Object, Array这样的复杂对象的复制都是浅复制，<strong>浅复制是对对象地址的复制</strong>,也就是说新对象和原对象都是访问同一块内存地址，修改其中一个对象的属性，则另一个对象的属性也会改变。相反，<strong>深复制则是开辟新的内存空间</strong>,也就是两个对象对应两个不同的地址，修改一个对象的属性，不会改变另一个对象的属性。</p>
-<blockquote>
-<pre><code>代码实现
-</code></pre><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//object深度复制，规避js原有的引用传递</span></span><br><span class="line">    public object_clone(source: <span class="built_in">Object</span>): <span class="built_in">Object</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> data: <span class="built_in">Object</span> = &#123;&#125;;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">in</span> source) &#123;</span><br><span class="line">            <span class="keyword">if</span> (source[key] == <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.getType(source[key]) == <span class="string">'object'</span>) &#123;</span><br><span class="line">                data[key] = <span class="keyword">this</span>.object_clone(source[key]);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">this</span>.getType(source[key]) == <span class="string">"array"</span>) &#123;</span><br><span class="line">                data[key] = <span class="keyword">this</span>.arr_clone(source[key]);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                data[key] = source[key];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> data;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//arr深度复制,对所有复杂arr均有效，规避js原有的引用传递</span></span><br><span class="line">    public arr_clone(source) &#123;</span><br><span class="line">        <span class="keyword">let</span> destination: any = [];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">in</span> source) &#123;</span><br><span class="line">            <span class="keyword">let</span> p = <span class="built_in">parseInt</span>(key);</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.getType(source[p]) == <span class="string">"array"</span>) &#123;</span><br><span class="line">                destination[p] = [];</span><br><span class="line">                <span class="built_in">arguments</span>.callee(destination[p], source[p]);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">this</span>.getType(source[p]) == <span class="string">"object"</span>) &#123;</span><br><span class="line">                destination[p] = &#123;&#125;;</span><br><span class="line">                destination[p] = <span class="keyword">this</span>.object_clone(source[p]);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                destination[p] = source[p];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> destination;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private getType(o) &#123;</span><br><span class="line">        <span class="keyword">let</span> _t;</span><br><span class="line">        <span class="keyword">return</span> ((_t = <span class="keyword">typeof</span> (o)) == <span class="string">"object"</span> ? o == <span class="literal">null</span> &amp;&amp; <span class="string">"null"</span> || <span class="built_in">Object</span>.prototype.toString.call(o).slice(<span class="number">8</span>, <span class="number">-1</span>) : _t).toLowerCase();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p>可将此方法写入工具类中，方便使用时调用</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
       
 
       
       
-        <div class="post-eof"></div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/22/JS-copy/" rel="next" title="JavaScript踩过的坑---深复制和浅复制">
+                <i class="fa fa-chevron-left"></i> JavaScript踩过的坑---深复制和浅复制
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
       
     </footer>
   </div>
@@ -469,10 +361,11 @@
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -480,6 +373,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -500,8 +397,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -556,6 +462,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#EUI容器布局"><span class="nav-number">1.</span> <span class="nav-text">EUI容器布局</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#弧形"><span class="nav-number">1.0.1.</span> <span class="nav-text">弧形</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -696,6 +618,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
