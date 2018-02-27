@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Tools," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="游戏加载优化由于微信及H5版本的加载压力，以及游戏自身品质性能的提高，对游戏进行加载优化，优化方向为：合并api请求，合并json文件，整理资源组，合图组。删除废弃的加载项。 https请求：1.部分功能在独带版已经废弃，或者暂不开启。可将这部分请求删除。2.部分请求可以一次游戏仅请求一次，或者一段间隔后再次请求，原来支持这种设定，现在与6666合并冲突，调整下重新支持。3.部分请求合并后，由于多">
+<meta name="keywords" content="Tools">
+<meta property="og:type" content="article">
+<meta property="og:title" content="游戏优化相关浅谈">
+<meta property="og:url" content="http://yoursite.com/2017/11/11/youhua/index.html">
+<meta property="og:site_name" content="Welcome To Junix&#39;s Blog">
+<meta property="og:description" content="游戏加载优化由于微信及H5版本的加载压力，以及游戏自身品质性能的提高，对游戏进行加载优化，优化方向为：合并api请求，合并json文件，整理资源组，合图组。删除废弃的加载项。 https请求：1.部分功能在独带版已经废弃，或者暂不开启。可将这部分请求删除。2.部分请求可以一次游戏仅请求一次，或者一段间隔后再次请求，原来支持这种设定，现在与6666合并冲突，调整下重新支持。3.部分请求合并后，由于多">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-02-27T03:14:22.787Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="游戏优化相关浅谈">
+<meta name="twitter:description" content="游戏加载优化由于微信及H5版本的加载压力，以及游戏自身品质性能的提高，对游戏进行加载优化，优化方向为：合并api请求，合并json文件，整理资源组，合图组。删除废弃的加载项。 https请求：1.部分功能在独带版已经废弃，或者暂不开启。可将这部分请求删除。2.部分请求可以一次游戏仅请求一次，或者一段间隔后再次请求，原来支持这种设定，现在与6666合并冲突，调整下重新支持。3.部分请求合并后，由于多">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/11/11/youhua/"/>
+
+
+
+
+
+  <title>游戏优化相关浅谈 | Welcome To Junix's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Welcome To Junix's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/11/youhua/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Junix">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Welcome To Junix's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">游戏优化相关浅谈</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-11T15:02:41+08:00">
+                2017-11-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="游戏加载优化"><a href="#游戏加载优化" class="headerlink" title="游戏加载优化"></a>游戏加载优化</h1><p>由于微信及H5版本的加载压力，以及游戏自身品质性能的提高，对游戏进行加载优化，优化方向为：合并api请求，合并json文件，整理资源组，合图组。删除废弃的加载项。</p>
+<h2 id="https请求："><a href="#https请求：" class="headerlink" title="https请求："></a>https请求：</h2><p>1.部分功能在独带版已经废弃，或者暂不开启。可将这部分请求删除。<br>2.部分请求可以一次游戏仅请求一次，或者一段间隔后再次请求，原来支持这种设定，现在与6666合并冲突，调整下重新支持。<br>3.部分请求合并后，由于多个请求之间参数可能相同，所以将携带参数的请求没有合并到6666中，与服务端协调，合并到请求包中。</p>
+<h2 id="静态表及JSON："><a href="#静态表及JSON：" class="headerlink" title="静态表及JSON："></a>静态表及JSON：</h2><p>1.部分功能在独带版已经废弃，或者暂不开启。可将这部分请求删除。比如敏感字校验<br>2.合并部分json进入config中，注意静态表本身有缓存机制，不要将频繁修改的静态表合到config中。避免单文件过大，也可以合并几个文件为一个configX,注意不要造成单场景加载量过大。config中现有的静态表也排查一遍，去掉无用和频繁修改的表。<br>3.删除静态表的废弃字段，及废弃数据。比如签到数据可以仅保留近2个月的数据，每次大更新修改一次。<br>4.场景移除时，释放该场景使用的静态表，下次使用时重新从缓存中获取（风险较高，暂不处理）。</p>
+<h2 id="图片，皮肤文件："><a href="#图片，皮肤文件：" class="headerlink" title="图片，皮肤文件："></a>图片，皮肤文件：</h2><p>1.所有图片进行压缩，尤其是技术导出的位图文本，MC，合图文件。一定要压缩。<br>2.皮肤中不要有文本赋值，不要给组件属性赋默认值，非特殊情况不要指定字体。避免无意义的Group。（此项针对小游戏皮肤压缩，详细规则可参照小游戏皮肤优化建议）。<br>3.去掉图片同一次场景打开时，不会使用的资源赋值，如后宫背景的白天夜晚资源（代码动态指定），选秀的两人|三人模式（多状态控制）。这种情况在皮肤中不要给source赋值，在代码中动态指定即可。<br>4.将常用的样式封装成组件，多处复用。（有利于小游戏皮肤压缩，代码压缩）。<br>5.避免通用组件复杂化，应合理均衡多样化和拆分。（较为复杂，统一处理）。<br>6.纯色背景的九宫拉伸，减少合图体积。（需要美工少许协助）。<br>7.背景通用化，将背景固定为几个格式，技术和美工使用统一命名。避免资源重复，显示效果不统一。（需要美工大量协助）<br>8.数字位图文本通用化，预设多个数字文本，统一命名，指定使用，（由于异步加载，不建议合图，且需美工协助，实际意义不大，可延后处理）。<br>9.同一个图片，如果仅存在尺寸差异，可考虑使用一张大图进行放缩，但不建议放缩比例过大会影响效果和单场景的内存占用，常用的货币图标不建议进行放缩。<br>10.可明显划分区域的复杂背景，建议使用九宫拉伸，或者文件拆分。（需要美工协助，工作量大，延后处理）<br>11.SSbtton优化，分为底层背景+上层位图文本+右上角红点提示。点击可同步缩放。背景和位图文本均分样式进行预设，美工技术采用统一命名进行指定。（需要美工及大协助，工作量巨大，延后处理）<br>12.样式背景，可进行适当拆分，例如任务条目的背景。（需要美工的大量协助，且需要考虑美术效果，延后处理）<br>13.会同时使用的MC可以合并多个为同一个文件，减少请求数量。</p>
+<h2 id="资源组，合图组："><a href="#资源组，合图组：" class="headerlink" title="资源组，合图组："></a>资源组，合图组：</h2><p>1.资源一定要配置预加载，便于使用和释放。<br>2.发布时一定要合图，合图后一定要压缩。MC，位图文本，龙骨资源不要进行合图。<br>3.public\preload中资源不要放置在任何资源组与合图组中，因此对public中的资源要严格校验是否通用。<br>4.alert中为次常用资源，请配置到需要的资源组中，以便于内存释放，但不要放入任何合图组中，以免造成过量加载。<br>5.通常一个目录下的所有资源应在同一个预加载资源组中，同一个合图组中。如不在同一个资源组中，请使用划分物理目录的形式进行区分。<br>6.由于合图应小于1024<em>1024，一个资源组 = m </em> 合图组 + n <em> 组内零散资源 + k </em> alert资源。<br>7.由于合图是按照2次幂进行尺寸匹配，应避免合图后出现大量空白。<br>8.零散使用的资源不建议进行合图，避免占用过多内存，这样的资源应放置在base包中。<br>9.将稳定的零散资源，稳定的界面放置在base包中，利用缓存机制，减少加载数，和更新后由于回源造成的加载延时。</p>
+<h2 id="动态加载："><a href="#动态加载：" class="headerlink" title="动态加载："></a>动态加载：</h2><p>目前技术支持动态配置静态表，动态配置网络请求，动态配置资源组。开发根据情况在preloadtool和systemproxy中进行配置。<br>优化：<br>1.将动态配置方法均转移至systemproxy中，使加载逻辑与动态配置逻辑相分离。<br>2.暂不支持同一个场景的预加载中，相互依赖的网络请求进行动态配置。如活动数据。</p>
+<h2 id="如何识别是否需要优化："><a href="#如何识别是否需要优化：" class="headerlink" title="如何识别是否需要优化："></a>如何识别是否需要优化：</h2><p>0.可通过浏览器查看加载下来的文件的源目录，api请求的参数和返回数据。<br>1.检查加载下来的图片是否有重复，仅存在尺寸差异。<br>2.检查加载下来的资源是否都有使用。<br>3.检查是都加载了多个合图，通常一个场景仅有一个合图，多余的合图是否大部分资源都不在本场景中使用。<br>4.检查打开界面后，是否有图片延迟显示。<br>5.检查加载下来的静态表是否需要。（需要对项目和代码有一定的了解）。<br>6.检查反复进入一个场景请求的api是否有变化。部分请求是不需要每次进入游戏都进行发送的。（需要对项目和代码有一定的了解）。<br>7.检查反复打开一个界面，是否有内存占用的显著增长。（需要对内存监管有了解）</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Tools/" rel="tag"># Tools</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/11/dyn-load/" rel="next" title="动态加载界面所需资源">
+                <i class="fa fa-chevron-left"></i> 动态加载界面所需资源
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Junix" />
+            
+              <p class="site-author-name" itemprop="name">Junix</p>
+              <p class="site-description motion-element" itemprop="description">很惭愧，一点微小的工作</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#游戏加载优化"><span class="nav-number">1.</span> <span class="nav-text">游戏加载优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#https请求："><span class="nav-number">1.1.</span> <span class="nav-text">https请求：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#静态表及JSON："><span class="nav-number">1.2.</span> <span class="nav-text">静态表及JSON：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#图片，皮肤文件："><span class="nav-number">1.3.</span> <span class="nav-text">图片，皮肤文件：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#资源组，合图组："><span class="nav-number">1.4.</span> <span class="nav-text">资源组，合图组：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#动态加载："><span class="nav-number">1.5.</span> <span class="nav-text">动态加载：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何识别是否需要优化："><span class="nav-number">1.6.</span> <span class="nav-text">如何识别是否需要优化：</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Junix</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
