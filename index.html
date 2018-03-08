@@ -232,6 +232,133 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/13/puremvc-use/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Junix">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Welcome To Junix's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/12/13/puremvc-use/" itemprop="url">Egret 4.1引擎以上第三方库文件制作、导入以及使用（二）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-13T19:26:07+08:00">
+                2017-12-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Egret-中使用puremvc"><a href="#Egret-中使用puremvc" class="headerlink" title="Egret 中使用puremvc"></a>Egret 中使用puremvc</h1><p>在上篇中介绍了如何将puremvc第三方库导入到项目中，在本文中将介绍如何在项目中启动puremvc。<br>首先需要用ts自定义实现ApplicationFacade的单例,实现如下:</p>
+<p>首先定义好统一消息管理文件，方便修改和维护<br><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> Jun &#123;</span><br><span class="line">    <span class="keyword">export</span> <span class="keyword">const</span> NOTICE = &#123;</span><br><span class="line">        <span class="string">"STARTUP"</span>                : <span class="string">"STARTUP"</span>,<span class="comment">//启动MVC</span></span><br><span class="line">        <span class="string">"CLIENT_INITED"</span>          : <span class="string">"CLIENT_INITED"</span>,<span class="comment">//客户端初始化完成</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>TypeScript自定义ApplicationFacade单例的实现<br><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">*	@author Junix</span></span><br><span class="line"><span class="comment">*	@desc 引擎面门，用于启动整个项目</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"><span class="keyword">module</span> Jun &#123;</span><br><span class="line">	<span class="keyword">export</span> <span class="keyword">class</span> ApplicationFacade <span class="keyword">extends</span> puremvc.Facade <span class="keyword">implements</span> puremvc.IFacade&#123;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">public</span> <span class="keyword">constructor</span>(<span class="params"></span>)&#123;</span><br><span class="line">			<span class="keyword">super</span>();</span><br><span class="line">		&#125;		</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">public</span> <span class="keyword">static</span> getInstance():ApplicationFacade&#123;</span><br><span class="line">			<span class="keyword">if</span> (<span class="keyword">this</span>.instance == <span class="literal">null</span>) &#123;</span><br><span class="line">				<span class="keyword">this</span>.instance = <span class="keyword">new</span> ApplicationFacade();</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">return</span> &lt;ApplicationFacade&gt;&lt;<span class="built_in">any</span>&gt; (<span class="keyword">this</span>.instance);</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">public</span> initializeController():<span class="built_in">void</span>&#123;</span><br><span class="line">			<span class="keyword">super</span>.initializeController();</span><br><span class="line">			<span class="keyword">this</span>.registerCommand(NOTICE.STARTUP, StartupCommand );</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="comment">/**</span></span><br><span class="line"><span class="comment">		 * 启动PureMVC，在应用程序中调用此方法，并传递应用程序本身的引用</span></span><br><span class="line"><span class="comment">		 * @param rootView:PureMVC应用程序的根视图root，包含其它所有的View Componet</span></span><br><span class="line"><span class="comment">		 */</span></span><br><span class="line">		<span class="keyword">public</span> startUp(rootView:egret.DisplayObjectContainer):<span class="built_in">void</span>&#123;</span><br><span class="line">			<span class="keyword">this</span>.sendNotification( NOTICE.STARTUP, stage );</span><br><span class="line">            <span class="keyword">this</span>.removeCommand(NOTICE.STARTUP);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>StartupCommand的实现<br><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">*   @author Junix</span></span><br><span class="line"><span class="comment">*   @desc StartupCommand 启动命令,项目启动后用于初始化M,V,C 命令</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"><span class="keyword">module</span> mx &#123;</span><br><span class="line">	<span class="keyword">export</span> <span class="keyword">class</span> StartupCommand <span class="keyword">extends</span> puremvc.MacroCommand&#123;</span><br><span class="line">		<span class="comment">//携带的消息会依次传递给子消息</span></span><br><span class="line">		<span class="keyword">public</span> initializeMacroCommand():<span class="built_in">void</span>&#123;</span><br><span class="line">			<span class="keyword">this</span>.addSubCommand(ModelPrepCommand);<span class="comment">//model管理器</span></span><br><span class="line">			<span class="keyword">this</span>.addSubCommand(ViewPrepCommand);<span class="comment">//view管理器</span></span><br><span class="line">			<span class="keyword">this</span>.addSubCommand(ControllerPrepCommand);<span class="comment">//controller管理器</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>对应的 ModelPrepCommand、ViewPrepCommand、ControllerPrepCommand的实现<br><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">*   @author Junix</span></span><br><span class="line"><span class="comment">*   @desc 数据层命令,注册所有的model</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"><span class="keyword">module</span> Jun &#123;</span><br><span class="line">	<span class="keyword">export</span> <span class="keyword">class</span> ModelPrepCommand <span class="keyword">extends</span> puremvc.SimpleCommand <span class="keyword">implements</span> puremvc.ICommand&#123;</span><br><span class="line">		<span class="keyword">public</span> execute(notification : puremvc.INotification) : <span class="built_in">void</span>&#123;</span><br><span class="line">        	<span class="keyword">this</span>.facade.registerProxy(<span class="keyword">new</span> GameProxy());</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">*   @author Junix</span></span><br><span class="line"><span class="comment">*   @desc 显示层命令,V层只注册跟容器的mediator 具体场景的mediator可去对应的view下注册</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"><span class="keyword">module</span> Jun &#123;</span><br><span class="line">	<span class="keyword">export</span> <span class="keyword">class</span> ViewPrepCommand <span class="keyword">extends</span> puremvc.SimpleCommand <span class="keyword">implements</span> puremvc.ICommand&#123;</span><br><span class="line">		<span class="keyword">public</span> execute(notification:puremvc.INotification):<span class="built_in">void</span>&#123;</span><br><span class="line">            <span class="keyword">let</span> main = notification.getBody();</span><br><span class="line">			<span class="keyword">this</span>.facade.registerMediator(<span class="keyword">new</span> MainMediator(main));</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">*   @author Junix</span></span><br><span class="line"><span class="comment">*   @desc 控制层命令, 注册所有command  </span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"><span class="keyword">module</span> Jun &#123;</span><br><span class="line">    <span class="keyword">export</span> <span class="keyword">class</span> ControllerPrepCommand <span class="keyword">extends</span> puremvc.SimpleCommand <span class="keyword">implements</span> puremvc.ICommand&#123;</span><br><span class="line">        <span class="keyword">public</span> execute(notification:puremvc.INotification):<span class="built_in">void</span>&#123;</span><br><span class="line">            (<span class="keyword">new</span> GameCommand()).register();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>准备工作完成，为了验证是否正确启动了puremvc，我们单独注册了GameCommand来监听CLIENT_INITED这一则消息,并有gameproxy做出对应处理<br><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//GameCommand 监听CLIENT_INITED</span></span><br><span class="line"><span class="keyword">module</span> Jun&#123;</span><br><span class="line">    <span class="keyword">export</span> <span class="keyword">class</span> GameCommand <span class="keyword">extends</span> puremvc.SimpleCommand <span class="keyword">implements</span> puremvc.ICommand&#123;</span><br><span class="line">        <span class="keyword">public</span> register() : <span class="built_in">void</span> &#123;</span><br><span class="line">            <span class="keyword">this</span>.facade.registerCommand(NOTICE.CLIENT_INITED,GameCommand);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> execute(notification:puremvc.INotification):<span class="built_in">void</span>&#123;</span><br><span class="line">            <span class="keyword">let</span> data = notification.getBody();</span><br><span class="line">            <span class="keyword">let</span> name = notification.getName();</span><br><span class="line">            <span class="keyword">let</span> proxy = &lt;GameProxy&gt;&lt;<span class="built_in">any</span>&gt; <span class="keyword">this</span>.facade.retrieveProxy(GameProxy.NAME);</span><br><span class="line">            <span class="keyword">switch</span>(name)&#123;</span><br><span class="line">                <span class="keyword">case</span> NOTICE.CLIENT_INITED:</span><br><span class="line">                    proxy.init_game();</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//GameProxy 相关数据处理</span></span><br><span class="line"><span class="keyword">module</span> Jun&#123;</span><br><span class="line">    <span class="keyword">export</span> <span class="keyword">class</span> GameProxy <span class="keyword">extends</span> puremvc.Proxy <span class="keyword">implements</span> puremvc.IProxy&#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> NAME : <span class="built_in">string</span> = <span class="string">'GameProxy'</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">constructor</span>(<span class="params"></span>)&#123;</span><br><span class="line">            <span class="keyword">super</span>(GameProxy.NAME);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//对应处理</span></span><br><span class="line">        <span class="keyword">public</span> init_game() : <span class="built_in">void</span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">'初始成功'</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在Main.ts中初始化，如果你有另写过游戏里自定义容器的话，则将该容器作为根视图传入startUp()中<br><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Main.ts创建主界面时</span></span><br><span class="line"><span class="comment">//初始化MVC结构</span></span><br><span class="line">Jun.ApplicationFacade.getInstance().startUp(<span class="keyword">this</span>);</span><br><span class="line"><span class="comment">//发送CLIENT_INITED消息</span></span><br><span class="line">Jun.ApplicationFacade.getInstance().sendNotification(jun.NOTICE.CLIENT_INITED);</span><br></pre></td></tr></table></figure></p>
+<p>最后运行项目，在输出控制台里有输出说明puremvc框架成功启动并使用<br><img src="https://raw.githubusercontent.com/fred664006254/fred664006254.github.io/master/images/mvc.png" alt="举个栗子"></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/09/third-lib/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1041,7 +1168,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

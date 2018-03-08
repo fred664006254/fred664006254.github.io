@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Egret," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Egret 中使用puremvc在上篇中介绍了如何将puremvc第三方库导入到项目中，在本文中将介绍如何在项目中启动puremvc。首先需要用ts自定义实现ApplicationFacade的单例,实现如下: 首先定义好统一消息管理文件，方便修改和维护123456module Jun &amp;#123;    export const NOTICE = &amp;#123;        &quot;STARTUP&quot;">
+<meta name="keywords" content="Egret">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Egret 4.1引擎以上第三方库文件制作、导入以及使用（二）">
+<meta property="og:url" content="http://yoursite.com/2017/12/13/puremvc-use/index.html">
+<meta property="og:site_name" content="Welcome To Junix&#39;s Blog">
+<meta property="og:description" content="Egret 中使用puremvc在上篇中介绍了如何将puremvc第三方库导入到项目中，在本文中将介绍如何在项目中启动puremvc。首先需要用ts自定义实现ApplicationFacade的单例,实现如下: 首先定义好统一消息管理文件，方便修改和维护123456module Jun &amp;#123;    export const NOTICE = &amp;#123;        &quot;STARTUP&quot;">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://raw.githubusercontent.com/fred664006254/fred664006254.github.io/master/images/mvc.png">
+<meta property="og:updated_time" content="2018-03-08T07:17:58.394Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Egret 4.1引擎以上第三方库文件制作、导入以及使用（二）">
+<meta name="twitter:description" content="Egret 中使用puremvc在上篇中介绍了如何将puremvc第三方库导入到项目中，在本文中将介绍如何在项目中启动puremvc。首先需要用ts自定义实现ApplicationFacade的单例,实现如下: 首先定义好统一消息管理文件，方便修改和维护123456module Jun &amp;#123;    export const NOTICE = &amp;#123;        &quot;STARTUP&quot;">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/fred664006254/fred664006254.github.io/master/images/mvc.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/12/13/puremvc-use/"/>
+
+
+
+
+
+  <title>Egret 4.1引擎以上第三方库文件制作、导入以及使用（二） | Welcome To Junix's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Welcome To Junix's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/13/puremvc-use/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Junix">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Welcome To Junix's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Egret 4.1引擎以上第三方库文件制作、导入以及使用（二）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-13T19:26:07+08:00">
+                2017-12-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Egret-中使用puremvc"><a href="#Egret-中使用puremvc" class="headerlink" title="Egret 中使用puremvc"></a>Egret 中使用puremvc</h1><p>在上篇中介绍了如何将puremvc第三方库导入到项目中，在本文中将介绍如何在项目中启动puremvc。<br>首先需要用ts自定义实现ApplicationFacade的单例,实现如下:</p>
+<p>首先定义好统一消息管理文件，方便修改和维护<br><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> Jun &#123;</span><br><span class="line">    <span class="keyword">export</span> <span class="keyword">const</span> NOTICE = &#123;</span><br><span class="line">        <span class="string">"STARTUP"</span>                : <span class="string">"STARTUP"</span>,<span class="comment">//启动MVC</span></span><br><span class="line">        <span class="string">"CLIENT_INITED"</span>          : <span class="string">"CLIENT_INITED"</span>,<span class="comment">//客户端初始化完成</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>TypeScript自定义ApplicationFacade单例的实现<br><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">*	@author Junix</span></span><br><span class="line"><span class="comment">*	@desc 引擎面门，用于启动整个项目</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"><span class="keyword">module</span> Jun &#123;</span><br><span class="line">	<span class="keyword">export</span> <span class="keyword">class</span> ApplicationFacade <span class="keyword">extends</span> puremvc.Facade <span class="keyword">implements</span> puremvc.IFacade&#123;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">public</span> <span class="keyword">constructor</span>(<span class="params"></span>)&#123;</span><br><span class="line">			<span class="keyword">super</span>();</span><br><span class="line">		&#125;		</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">public</span> <span class="keyword">static</span> getInstance():ApplicationFacade&#123;</span><br><span class="line">			<span class="keyword">if</span> (<span class="keyword">this</span>.instance == <span class="literal">null</span>) &#123;</span><br><span class="line">				<span class="keyword">this</span>.instance = <span class="keyword">new</span> ApplicationFacade();</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">return</span> &lt;ApplicationFacade&gt;&lt;<span class="built_in">any</span>&gt; (<span class="keyword">this</span>.instance);</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">public</span> initializeController():<span class="built_in">void</span>&#123;</span><br><span class="line">			<span class="keyword">super</span>.initializeController();</span><br><span class="line">			<span class="keyword">this</span>.registerCommand(NOTICE.STARTUP, StartupCommand );</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="comment">/**</span></span><br><span class="line"><span class="comment">		 * 启动PureMVC，在应用程序中调用此方法，并传递应用程序本身的引用</span></span><br><span class="line"><span class="comment">		 * @param rootView:PureMVC应用程序的根视图root，包含其它所有的View Componet</span></span><br><span class="line"><span class="comment">		 */</span></span><br><span class="line">		<span class="keyword">public</span> startUp(rootView:egret.DisplayObjectContainer):<span class="built_in">void</span>&#123;</span><br><span class="line">			<span class="keyword">this</span>.sendNotification( NOTICE.STARTUP, stage );</span><br><span class="line">            <span class="keyword">this</span>.removeCommand(NOTICE.STARTUP);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>StartupCommand的实现<br><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">*   @author Junix</span></span><br><span class="line"><span class="comment">*   @desc StartupCommand 启动命令,项目启动后用于初始化M,V,C 命令</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"><span class="keyword">module</span> mx &#123;</span><br><span class="line">	<span class="keyword">export</span> <span class="keyword">class</span> StartupCommand <span class="keyword">extends</span> puremvc.MacroCommand&#123;</span><br><span class="line">		<span class="comment">//携带的消息会依次传递给子消息</span></span><br><span class="line">		<span class="keyword">public</span> initializeMacroCommand():<span class="built_in">void</span>&#123;</span><br><span class="line">			<span class="keyword">this</span>.addSubCommand(ModelPrepCommand);<span class="comment">//model管理器</span></span><br><span class="line">			<span class="keyword">this</span>.addSubCommand(ViewPrepCommand);<span class="comment">//view管理器</span></span><br><span class="line">			<span class="keyword">this</span>.addSubCommand(ControllerPrepCommand);<span class="comment">//controller管理器</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>对应的 ModelPrepCommand、ViewPrepCommand、ControllerPrepCommand的实现<br><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">*   @author Junix</span></span><br><span class="line"><span class="comment">*   @desc 数据层命令,注册所有的model</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"><span class="keyword">module</span> Jun &#123;</span><br><span class="line">	<span class="keyword">export</span> <span class="keyword">class</span> ModelPrepCommand <span class="keyword">extends</span> puremvc.SimpleCommand <span class="keyword">implements</span> puremvc.ICommand&#123;</span><br><span class="line">		<span class="keyword">public</span> execute(notification : puremvc.INotification) : <span class="built_in">void</span>&#123;</span><br><span class="line">        	<span class="keyword">this</span>.facade.registerProxy(<span class="keyword">new</span> GameProxy());</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">*   @author Junix</span></span><br><span class="line"><span class="comment">*   @desc 显示层命令,V层只注册跟容器的mediator 具体场景的mediator可去对应的view下注册</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"><span class="keyword">module</span> Jun &#123;</span><br><span class="line">	<span class="keyword">export</span> <span class="keyword">class</span> ViewPrepCommand <span class="keyword">extends</span> puremvc.SimpleCommand <span class="keyword">implements</span> puremvc.ICommand&#123;</span><br><span class="line">		<span class="keyword">public</span> execute(notification:puremvc.INotification):<span class="built_in">void</span>&#123;</span><br><span class="line">            <span class="keyword">let</span> main = notification.getBody();</span><br><span class="line">			<span class="keyword">this</span>.facade.registerMediator(<span class="keyword">new</span> MainMediator(main));</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">*   @author Junix</span></span><br><span class="line"><span class="comment">*   @desc 控制层命令, 注册所有command  </span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"><span class="keyword">module</span> Jun &#123;</span><br><span class="line">    <span class="keyword">export</span> <span class="keyword">class</span> ControllerPrepCommand <span class="keyword">extends</span> puremvc.SimpleCommand <span class="keyword">implements</span> puremvc.ICommand&#123;</span><br><span class="line">        <span class="keyword">public</span> execute(notification:puremvc.INotification):<span class="built_in">void</span>&#123;</span><br><span class="line">            (<span class="keyword">new</span> GameCommand()).register();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>准备工作完成，为了验证是否正确启动了puremvc，我们单独注册了GameCommand来监听CLIENT_INITED这一则消息,并有gameproxy做出对应处理<br><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//GameCommand 监听CLIENT_INITED</span></span><br><span class="line"><span class="keyword">module</span> Jun&#123;</span><br><span class="line">    <span class="keyword">export</span> <span class="keyword">class</span> GameCommand <span class="keyword">extends</span> puremvc.SimpleCommand <span class="keyword">implements</span> puremvc.ICommand&#123;</span><br><span class="line">        <span class="keyword">public</span> register() : <span class="built_in">void</span> &#123;</span><br><span class="line">            <span class="keyword">this</span>.facade.registerCommand(NOTICE.CLIENT_INITED,GameCommand);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> execute(notification:puremvc.INotification):<span class="built_in">void</span>&#123;</span><br><span class="line">            <span class="keyword">let</span> data = notification.getBody();</span><br><span class="line">            <span class="keyword">let</span> name = notification.getName();</span><br><span class="line">            <span class="keyword">let</span> proxy = &lt;GameProxy&gt;&lt;<span class="built_in">any</span>&gt; <span class="keyword">this</span>.facade.retrieveProxy(GameProxy.NAME);</span><br><span class="line">            <span class="keyword">switch</span>(name)&#123;</span><br><span class="line">                <span class="keyword">case</span> NOTICE.CLIENT_INITED:</span><br><span class="line">                    proxy.init_game();</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//GameProxy 相关数据处理</span></span><br><span class="line"><span class="keyword">module</span> Jun&#123;</span><br><span class="line">    <span class="keyword">export</span> <span class="keyword">class</span> GameProxy <span class="keyword">extends</span> puremvc.Proxy <span class="keyword">implements</span> puremvc.IProxy&#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> NAME : <span class="built_in">string</span> = <span class="string">'GameProxy'</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">constructor</span>(<span class="params"></span>)&#123;</span><br><span class="line">            <span class="keyword">super</span>(GameProxy.NAME);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//对应处理</span></span><br><span class="line">        <span class="keyword">public</span> init_game() : <span class="built_in">void</span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">'初始成功'</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在Main.ts中初始化，如果你有另写过游戏里自定义容器的话，则将该容器作为根视图传入startUp()中<br><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Main.ts创建主界面时</span></span><br><span class="line"><span class="comment">//初始化MVC结构</span></span><br><span class="line">Jun.ApplicationFacade.getInstance().startUp(<span class="keyword">this</span>);</span><br><span class="line"><span class="comment">//发送CLIENT_INITED消息</span></span><br><span class="line">Jun.ApplicationFacade.getInstance().sendNotification(jun.NOTICE.CLIENT_INITED);</span><br></pre></td></tr></table></figure></p>
+<p>最后运行项目，在输出控制台里有输出说明puremvc框架成功启动并使用<br><img src="https://raw.githubusercontent.com/fred664006254/fred664006254.github.io/master/images/mvc.png" alt="举个栗子"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Egret/" rel="tag"># Egret</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/09/third-lib/" rel="next" title="Egret 4.1引擎以上第三方库文件制作、导入以及使用（一）">
+                <i class="fa fa-chevron-left"></i> Egret 4.1引擎以上第三方库文件制作、导入以及使用（一）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Junix" />
+            
+              <p class="site-author-name" itemprop="name">Junix</p>
+              <p class="site-description motion-element" itemprop="description">很惭愧，一点微小的工作</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Egret-中使用puremvc"><span class="nav-number">1.</span> <span class="nav-text">Egret 中使用puremvc</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Junix</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
