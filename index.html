@@ -232,6 +232,131 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/14/Basicui/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Junix">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Welcome To Junix's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/03/14/Basicui/" itemprop="url">基础界面组件</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-14T15:10:13+08:00">
+                2018-03-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="基础界面组件"><a href="#基础界面组件" class="headerlink" title="基础界面组件"></a>基础界面组件</h1><p>Eui中一个界面的创建，预加载资源和皮肤后，首先会在舞台上创建这个界面，随后再给这个界面绑定皮肤。这个步骤需要严格监听相对应的事件，顺序不能颠倒，故每写一个界面文件时，都需要处理监听这些事件，操作统一且固定，造成冗余。故现在抽离出一个基础界面类<strong>BasicUI</strong>,进行一些统一的操作，只要界面统一继承自这个BasicUI即可。</p>
+<blockquote>
+<pre><code>代码实现
+</code></pre><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> BasicUI <span class="keyword">extends</span> eui.Component &#123;</span><br><span class="line">    <span class="keyword">public</span> adata;<span class="comment">//protected adata;</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">constructor</span>(<span class="params">cd ?: <span class="built_in">any</span></span>) &#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">if</span>(cd)&#123;</span><br><span class="line">            <span class="keyword">this</span>.adata = cd;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">let</span> c_class = <span class="keyword">this</span>[<span class="string">"__class__"</span>] <span class="keyword">as</span> <span class="built_in">string</span>;</span><br><span class="line">        <span class="keyword">let</span> c_arr = c_class.split(<span class="string">"."</span>);</span><br><span class="line">        <span class="keyword">this</span>.name = c_arr[<span class="number">1</span>];<span class="comment">//每个界面独有name 此方法可获取</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">this</span>.addEventListener(egret.Event.ADDED_TO_STAGE, <span class="keyword">this</span>.onAddToStage, <span class="keyword">this</span>);<span class="comment">//添加到舞台</span></span><br><span class="line">        <span class="keyword">this</span>.addEventListener(egret.Event.REMOVED_FROM_STAGE, <span class="keyword">this</span>.remove_self, <span class="keyword">this</span>);<span class="comment">//从舞台上移除</span></span><br><span class="line">        <span class="keyword">this</span>.addEventListener(eui.UIEvent.COMPLETE, <span class="keyword">this</span>.mx_created, <span class="keyword">this</span>);<span class="comment">//绑定批复后，所有元素加载完成</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> onAddToStage(event:egret.Event) &#123;</span><br><span class="line">        <span class="keyword">this</span>.removeEventListener(egret.Event.ADDED_TO_STAGE, <span class="keyword">this</span>.onAddToStage, <span class="keyword">this</span>);</span><br><span class="line">        <span class="comment">//舞台上创建完毕后，绑定对应皮肤文件</span></span><br><span class="line">        <span class="keyword">this</span>.set_skinname();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> mx_created(event:eui.UIEvent):<span class="built_in">void</span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.removeEventListener(eui.UIEvent.COMPLETE, <span class="keyword">this</span>.mx_created, <span class="keyword">this</span>);</span><br><span class="line">        <span class="comment">//所有元素加载完成 后续操作自定义实现</span></span><br><span class="line">        <span class="keyword">this</span>.pre_init();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> remove_self() : <span class="built_in">void</span>&#123;</span><br><span class="line">        <span class="keyword">let</span> view = <span class="keyword">this</span>;</span><br><span class="line">        view.removeEventListener(egret.Event.ADDED_TO_STAGE, <span class="keyword">this</span>.onAddToStage, <span class="keyword">this</span>);</span><br><span class="line">        view.removeEventListener(egret.Event.REMOVED_FROM_STAGE, <span class="keyword">this</span>.remove_self, <span class="keyword">this</span>);</span><br><span class="line">        view.removeEventListener(eui.UIEvent.COMPLETE, <span class="keyword">this</span>.mx_created, <span class="keyword">this</span>);</span><br><span class="line">        view.on_remove();</span><br><span class="line">        view.removeChildren();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//通用的绑定皮肤方法，子类可覆盖</span></span><br><span class="line">    <span class="keyword">protected</span> set_skinname() : <span class="built_in">void</span>&#123;</span><br><span class="line">        <span class="keyword">let</span> cname = <span class="keyword">this</span>.name + <span class="string">"Skin"</span>;</span><br><span class="line">        <span class="keyword">let</span> skins = <span class="built_in">window</span> &amp;&amp; <span class="built_in">window</span>[<span class="string">"skins"</span>];</span><br><span class="line">        <span class="keyword">if</span>(skins &amp;&amp; skins[cname])&#123;</span><br><span class="line">            <span class="keyword">this</span>.skinName = skins[cname];</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.skinName = RES.getRes(cname + <span class="string">"_exml"</span>);<span class="comment">//默认使用立刻获取的方式</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//子类初始化操作</span></span><br><span class="line">    <span class="keyword">protected</span> pre_init() : <span class="built_in">void</span>&#123;&#125;</span><br><span class="line">    <span class="keyword">protected</span> on_remove() : <span class="built_in">void</span>&#123;&#125;<span class="comment">//仅处理特殊逻辑操作</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> set_scale(s: <span class="built_in">number</span>): <span class="built_in">void</span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.scaleX = <span class="keyword">this</span>.scaleY = s;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p><strong>egret.Event.ADDED_TO_STAGE</strong>和<strong>eui.UIEvent.COMPLETE</strong>这两个事件需要在所有文件界面中处理，故提取到基类处理，减少代码量，也不用暴露给开发。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/13/puremvc-use/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1168,7 +1293,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
